@@ -1,18 +1,26 @@
 import { abbr } from 'bible-references'
-import { getVersion } from '../api'
 import kjv from '../../version/kjv.json'
 
-window.kjv = kjv
-
-export const bookNumber = abbr.reduce((acc, bookAbbrs, i) => {
+const bookNumber = abbr.reduce((acc, bookAbbrs, i) => {
   acc[bookAbbrs[0]] = i
   return acc
 }, {})
 
-export const bookName = abbr.reduce((acc, bookAbbrs, i) => {
+const bookNames = abbr.reduce((acc, bookAbbrs, i) => {
   acc[i] = bookAbbrs[0]
   return acc
 }, {})
+
+// const bookDisplayNames = Object.values(bookNames)
+//   .map(book => book.replace(
+//     /\b\w/g,
+//     (m) => m.toUpperCase()
+//   ).replace(' Of ', ' of '))
+
+export const titleCase = str => str.replace(
+  /\b\w/g,
+  (m) => m.toUpperCase()
+).replace(' Of ', ' of ')
 
 export const bibleVersionToLookUp = (bibleVersion) => {
   const verseList = []
@@ -36,9 +44,7 @@ export const bibleVersionToLookUp = (bibleVersion) => {
         last.books[b].chapters[c].verse = verse.n
         verseLookUp[`${b}:${c}:${verse.n}`] = verseList.length
         verseList.push({
-          verse: verse.n,
-          chapter: c,
-          book: b,
+          hash: `${b}:${c}:${verse.n}`,
           text: verse.txt,
         })
       })
@@ -65,13 +71,13 @@ const limit = (n, max) => {
 
 export const fillRangeEnds = (versionName, verseRange) => {
   const { start, end } = verseRange
-  const version = versions[versionName]
+  const version = getVersion(versionName)
   const startIndex = version
     .verseLookUp[`${bookNumber[start.book]}:${start.chapter - 1}:${start.verse}`]
   const maxBook = version.last.book
   const endBook = limit(bookNumber[end.book], maxBook)
   const maxChapter = version.last.books[endBook].chapter
-  const endChapter = limit(end.chapter, maxChapter)
+  const endChapter = limit(end.chapter && end.chapter - 1, maxChapter)
   const maxVerse = version.last.books[endBook].chapters[endChapter].verse
   const endVerse = limit(end.verse, maxVerse)
   const endIndex = version
@@ -83,29 +89,54 @@ export const fillRangeEnds = (versionName, verseRange) => {
       index: startIndex,
     },
     end: {
-      book: bookName[endBook],
-      chapter: endChapter,
+      book: getBookName(endBook),
+      chapter: endChapter + 1,
       verse: endVerse,
       index: endIndex,
     },
   }
 }
 
-export const verseRangeToVerses = (versionName, verseRange) => {
-  const { start, end } = verseRange
-  const version = versions[versionName]
-  const startIndex = version
-    .verseLookUp[`${bookNumber[start.book]}:${start.chapter}:${start.verse}`]
-  const maxBook = version.last.book
-  const endBook = limit(bookNumber[end.book], maxBook)
-  const maxChapter = version.last.books[endBook].chapter
-  const endChapter = limit(end.chapter, maxChapter)
-  const maxVerse = version.last.books[endBook].chapters[endChapter].verse
-  const endVerse = limit(end.verse, maxVerse)
-  const endIndex = version
-    .verseLookUp[`${endBook}:${endChapter}:${endVerse}`]
-  console.log(endBook, endChapter, endVerse, endIndex)
-  return { startIndex, endIndex }
+export const getBookName = index => bookNames[index]
+
+export const expandHash = hash => {
+  const parts = hash.split(':')
+  return {
+    book: getBookName(parts[0]),
+    chapter: parts[1] * 1 + 1,
+    verse: parts[2],
+  }
+}
+export const getVersion = versionName => versions[versionName]
+export const getBookNumber = bookName => bookNumber[bookName]
+
+export const getIndexFromHash = (versionName, hash) =>
+  versions[versionName].verseLookUp[hash]
+
+export const getVerseFromIndex = (versionName, index) =>
+  versions[versionName].verseList[index]
+
+export const getVerseFromHash = (versionName, hash) => {
+  const index = getIndexFromHash(versionName, hash)
+  const { text } = getVerseFromIndex(versionName, index)
+  return {
+    text,
+    ...expandHash(hash),
+  }
 }
 
-export const getBookNumber = bookName => bookNumber[bookName]
+const getIndexRange = (startIndex, endIndex) => {
+  const indices = []
+  for (let i = startIndex; i <= endIndex; i++) {
+    indices.push(i)
+  }
+  return indices
+}
+
+export const getHashesFromIndexRange = (
+  versionName,
+  startIndex,
+  endIndex
+) =>
+  getIndexRange(startIndex, endIndex)
+    .map(index => getVersion(versionName).verseList[index].hash)

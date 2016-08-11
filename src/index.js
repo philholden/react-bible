@@ -3,6 +3,8 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import App from './components/app'
 import { AppContainer } from 'react-hot-loader'
 import VerseListModel from './models/verse-list-model'
+import { Provider } from 'mobx-react'
+import 'react-virtualized/styles.css'
 
 const verseList = new VerseListModel()
 console.log(verseList)
@@ -10,7 +12,9 @@ console.log(verseList)
 function rerender(App2) {
   render(
     <AppContainer>
-      <App2 verseList={verseList} />
+      <Provider verseList={verseList}>
+        <App2 />
+      </Provider>
     </AppContainer>,
     document.getElementById('root')
   )
