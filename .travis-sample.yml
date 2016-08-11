@@ -1,0 +1,29 @@
+# this is sample travis.yml:
+# semantic-release-cli setup
+sudo: false
+language: node_js
+cache:
+  directories:
+    - node_modules
+branches:
+  only:
+    - master
+notifications:
+  email: false
+node_js:
+  - "6.2.2"
+before_install:
+  - npm i -g npm@^3.0.0
+before_script:
+  - npm prune
+script:
+  - npm run test:cover
+  - npm run check-coverage
+  - npm run build
+after_success:
+  - npm run report-coverage
+  - npm run semantic-release:deploy
+# - npm run semantic-release:npm
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"

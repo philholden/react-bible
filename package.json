@@ -1,0 +1,144 @@
+{
+  "name": "@philholden/bible-react",
+  "version": "0.0.1-semantic",
+  "description": "bible with as you type search",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib dist",
+    "build:webpack": "npm run clean && NODE_ENV=production webpack --config webpack.config.js --env.prod",
+    "build:babel": "npm run clean && NODE_ENV=lib babel src --out-dir lib",
+    "build": "npm run clean && npm run build:webpack",
+    "start": "node devServer.js",
+    "lint": "eslint src",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "commit": "git-cz",
+    "open-coverage": "open ./coverage/lcov-report/index.html",
+    "check-coverage": "nyc check-coverage --statements 0 --branches 0 --functions 0 --lines 0",
+    "report-coverage": "nyc report --reporter=text-lcov | codecov",
+    "test": "BABEL_ENV=test ava **/*.test.js",
+    "test:watch": "npm t -- -w --verbose",
+    "test:cover": "BABEL_ENV=test nyc --reporter=lcov --reporter=text npm t",
+    "deploy": "echo NOOP",
+    "semantic-release:npm": "semantic-release pre && npm publish --access public && semantic-release post",
+    "semantic-release:deploy": "NPM_TOKEN=fake semantic-release pre && npm run deploy && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philholden/bible-react.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "boilerplate",
+    "hot",
+    "reload",
+    "hmr",
+    "live",
+    "edit",
+    "webpack",
+    "babel",
+    "react-transform"
+  ],
+  "author": "Phil Holden (http://github.com/philholden)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/philholden/bible-react/issues"
+  },
+  "homepage": "https://github.com/philholden/bible-react",
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.10.4",
+    "babel-eslint": "^6.1.0",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-istanbul": "^1.0.3",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-flow-strip-types": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-plugin-webpack-loaders": "^0.7.0",
+    "babel-preset-es2015-webpack": "^6.4.1",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-1": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "bible-references": "^1.0.3",
+    "codecov.io": "0.1.6",
+    "commitizen": "^2.5.0",
+    "compression": "^1.6.1",
+    "cross-env": "^1.0.7",
+    "cz-conventional-changelog": "^1.1.5",
+    "enzyme": "^2.4.1",
+    "eslint": "^2.9.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-flowtype": "^2.3.0",
+    "eslint-plugin-import": "^1.10.0",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.2.2",
+    "eventsource-polyfill": "^0.9.6",
+    "expect": "^1.16.0",
+    "expect-jsx": "^2.5.1",
+    "express": "^4.13.3",
+    "fetch-mock": "^5.0.0",
+    "file-loader": "^0.8.5",
+    "flow-bin": "^0.27.0",
+    "ghooks": "^1.3.2",
+    "is_js": "^0.7.6",
+    "isomorphic-fetch": "^2.2.1",
+    "jsdom": "^9.4.1",
+    "json-loader": "^0.5.4",
+    "nodemon": "^1.8.1",
+    "nyc": "^7.0.0",
+    "react": "^15.0.2",
+    "react-addons-test-utils": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "react-hot-loader": "^3.0.0-beta.2",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "rimraf": "^2.4.3",
+    "semantic-release": "^4.3.5",
+    "sinon": "^1.17.4",
+    "socket.io": "^1.4.0",
+    "subdivide": "^0.5.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.1.0-beta.15",
+    "webpack-dev-middleware": "^1.4.0",
+    "webpack-hot-middleware": "^2.6.0"
+  },
+  "config": {
+    "ghookx": {
+      "pre-commit": "npm run test:cover && npm run check-coverage"
+    },
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "release": {
+    "debug": false
+  },
+  "ava": {
+    "require": [
+      "babel-register",
+      "./null-compiler"
+    ],
+    "babel": {
+      "presets": [
+        "react",
+        "es2015",
+        "stage-1"
+      ]
+    }
+  },
+  "nyc": {
+    "exclude": [
+      "**/__tests__/**/*.js",
+      "null-compiler.js"
+    ],
+    "require": [
+      "babel-register",
+      "./null-compiler"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  }
+}
