@@ -6,6 +6,7 @@ import * as bib from '../util/bible'
 import DebugVerseListPane from './debug-verse-list-pane'
 import EditVerseListPane from './edit-verse-list-pane'
 import VersesPane from './verses-pane'
+import VersePaneDom from './verse-pane-dom'
 
 window.bib = bib
 
@@ -16,7 +17,10 @@ const App = ({ verseList }) => (
   <div style={styles.wrapper}>
     <EditVerseListPane />
     <DebugVerseListPane />
-    <VersesPane />
+    <VersePaneDom
+      versionName="kjv"
+      hashList={verseList.hashList}
+    />
   </div>
 )
 

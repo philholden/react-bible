@@ -140,3 +140,11 @@ export const getHashesFromIndexRange = (
 ) =>
   getIndexRange(startIndex, endIndex)
     .map(index => getVersion(versionName).verseList[index].hash)
+
+export const getHashesFromVerseRanges = (versionName, verseRanges) => {
+  const ranges = verseRanges.map(
+    ({ start, end }) =>
+      getHashesFromIndexRange(versionName, start.index, end.index)
+  )
+  return [].concat(...ranges)
+}

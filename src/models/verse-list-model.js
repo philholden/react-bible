@@ -6,6 +6,7 @@ import { getVerseRanges } from 'bible-references'
 import {
   fillRangeEnds,
   getVersion,
+  getHashesFromVerseRanges,
 } from '../util/bible'
 
 console.log(getVerseRanges(''))
@@ -25,5 +26,8 @@ export default class VerseListModel {
     console.log(JSON.stringify(ranges2, 0, 2))
     console.log(JSON.stringify(ends), 0, 2)
     return ranges2
+  }
+  @computed get hashList() {
+    return getHashesFromVerseRanges('kjv', this.verseRanges)
   }
 }
