@@ -19,6 +19,9 @@ export default class VerseListModel {
   @observable filterText = ''
   @observable caseSensitive = false
   @observable fullWords = false
+  @computed get rangesText() {
+    return this.text
+  }
   @computed get verseRanges() {
     const text = this.text || 'gen - rev'
     const ranges = getVerseRanges(text)

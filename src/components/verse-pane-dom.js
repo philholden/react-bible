@@ -8,6 +8,8 @@ import {
   getVersion,
   getVerseFromHash,
   titleCase,
+  getFullVerseRanges,
+  getHashesFromVerseRanges,
 } from '../util/bible'
 
 type VersePaneDomPropsType = {
@@ -22,6 +24,7 @@ class VersePaneDom extends Component {
   rootEl: HTMLElement
   searchRoot: HTMLElement
   clearRenderTimeout = -1
+  hashList: Array<string> = []
 
   shouldComponentUpdate() {
     return false
@@ -104,23 +107,25 @@ class VersePaneDom extends Component {
     caseSensitive,
     rangesText,
     versionName,
-    
-    hashList,
+
+//    hashList,
     filterFn,
   }, oldProps) => {
-    console.log(filterText)
+    const fullRange = getFullVerseRanges({ rangesText, versionName })
+    const hashList = getHashesFromVerseRanges(versionName, fullRange)
     window.clearTimeout(this.clearRenderTimeout)
     const { rootEl } = this
     if (!rootEl) return
     if (
       oldProps &&
       arrayEquals(
-        oldProps.hashList,
+        this.hashList,
         hashList,
       )
-      && filterFn === oldProps.filterFn
+      && filterText === oldProps.filterText
     ) return
 
+    this.hashList = hashList
     const { verseList } = getVersion(versionName)
     const displayLookUp = hashList.reduce((acc, item) => {
       acc[item] = true

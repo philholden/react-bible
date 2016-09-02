@@ -1,4 +1,7 @@
-import { abbr } from 'bible-references'
+import {
+  abbr,
+  getVerseRanges
+} from 'bible-references'
 import kjv from '../../version/kjv.json'
 
 const bookNumber = abbr.reduce((acc, bookAbbrs, i) => {
@@ -147,4 +150,11 @@ export const getHashesFromVerseRanges = (versionName, verseRanges) => {
       getHashesFromIndexRange(versionName, start.index, end.index)
   )
   return [].concat(...ranges)
+}
+
+export const getFullVerseRanges = ({ rangesText, versionName }) => {
+  const text = rangesText || 'gen - rev'
+  const ranges = getVerseRanges(text)
+  return ranges.map(range =>
+    fillRangeEnds(versionName, range))
 }

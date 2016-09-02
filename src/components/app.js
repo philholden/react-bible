@@ -23,11 +23,12 @@ function App ({ verseList }) {
           <DebugVerseListPane />
           <VersePaneDom
             versionName="kjv"
-            hashList={verseList.hashList}
+            // hashList={verseList.hashList}
             filterFn={verseList.filterFn}
-            // filterText={verseList.filterText}
-            // fullWords={verseList.fullWords}
-            // caseSensitive={verseList.caseSensitive}
+            filterText={verseList.filterText}
+            rangesText={verseList.rangesText}
+            fullWords={verseList.fullWords}
+            caseSensitive={verseList.caseSensitive}
           />
         </div>
       </div>
