@@ -11,26 +11,30 @@ import QueryBar from './query-bar'
 
 window.bib = bib
 
-const App = ({ verseList }) => (
-  <div style={styles.wrapper}>
-    <div style={styles.col}>
-      <div style={styles.row1}>
-        <QueryBar />
-      </div>
-      <div style={styles.row2}>
-        <EditVerseListPane />
-        <DebugVerseListPane />
-        <VersePaneDom
-          versionName="kjv"
-          hashList={verseList.hashList}
-          filterText={verseList.filterText}
-          fullWords={verseList.fullWords}
-          caseSensitive={verseList.caseSensitive}
-        />
+function App ({ verseList }) {
+  return (
+    <div style={styles.wrapper}>
+      <div style={styles.col}>
+        <div style={styles.row1}>
+          <QueryBar />
+        </div>
+        <div style={styles.row2}>
+          <EditVerseListPane />
+          <DebugVerseListPane />
+          <VersePaneDom
+            versionName="kjv"
+            hashList={verseList.hashList}
+            filterFn={verseList.filterFn}
+            // filterText={verseList.filterText}
+            // fullWords={verseList.fullWords}
+            // caseSensitive={verseList.caseSensitive}
+          />
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
+
 
 const styles = {
   wrapper: {

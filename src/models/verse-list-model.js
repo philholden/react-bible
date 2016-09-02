@@ -20,12 +20,12 @@ export default class VerseListModel {
   @observable caseSensitive = false
   @observable fullWords = false
   @computed get verseRanges() {
-    const ranges = getVerseRanges(this.text)
+    const text = this.text || 'gen - rev'
+    const ranges = getVerseRanges(text)
     return ranges.map(range =>
       fillRangeEnds('kjv', range))
   }
   @computed get hashList() {
-    console.log('run')
     return getHashesFromVerseRanges('kjv', this.verseRanges)
   }
   @computed get filterFn() {

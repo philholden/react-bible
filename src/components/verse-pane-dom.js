@@ -19,7 +19,70 @@ class VersePaneDom extends Component {
   }
 
   componentDidMount() {
+    const { versionName } = this.props
+    const version = getVersion(versionName)
     this.updateDom(this.props, true)
+    console.log(version)
+    document.addEventListener('keydown', (e: Event) => {
+      let el = e.target
+      console.log(e.keyCode, el.id, el.classList)
+      if (
+        (el.classList.contains('verse') ||
+        el.classList.contains('verse-group'))
+        && [37, 38, 39, 40].indexOf(e.keyCode) !== -1
+      ) {
+        console.log('prevent')
+        e.preventDefault()
+        if (el.classList.contains('verse')) {
+          el.outerHTML = `
+          <div id="${el.id}" tabindex="100" class="verse-group">
+          <div class="verses-before"></div>
+          <div class="verse">${el.innerHTML}</div>
+          <div class="verses-after"></div>
+          </div>`
+          el = document.getElementById(el.id)
+        }
+        const beforeEl = el.querySelector('.verses-before')
+        const afterEl = el.querySelector('.verses-after')
+        el.focus()
+        const div = document.createElement('div')
+        //setTimeout(() => el.focus(), 1000)
+        switch(e.keyCode) {
+          case 37: {
+            const { length } = beforeEl.children
+            const index = version.verseLookUp[el.id] - (length + 1)
+            if (index < 0) return
+            const { hash } = version.verseList[index]
+            beforeEl.insertBefore(div, beforeEl.firstChild)
+            div.outerHTML = renderVerse(versionName, hash)
+            break;
+          }
+          case 39:
+            console.log(beforeEl)
+            if (beforeEl.firstChild) beforeEl.firstChild.remove()
+            break;
+          case 40: {
+            const { length } = afterEl.children
+            const index = version.verseLookUp[el.id] + (length + 1)
+            if (index >= version.verseLookUp) return
+            const { hash } = version.verseList[index]
+            afterEl.appendChild(div)
+            div.outerHTML = renderVerse(versionName, hash)
+            break;
+          }
+            afterEl.appendChild(div)
+            div.outerHTML = `
+            <div class="verse">
+              ${text} <em>(${reference})</em>
+            </div>\n`
+            break;
+          case 38:
+            if (afterEl.lastChild) afterEl.lastChild.remove()
+            break;
+        }
+        return false
+      }
+    })
   }
 
   componentWillReceiveProps(props) {
@@ -38,12 +101,9 @@ class VersePaneDom extends Component {
     filterText,
     fullWords,
     caseSensitive,
+    filterFn,
   }, isInit) => {
-    const filterFn = googlish(
-      filterText,
-      fullWords,
-      caseSensitive
-    )
+    console.log(filterText)
     window.clearTimeout(this.clearRenderTimeout)
     const { props, rootEl } = this
     if (!rootEl) return
@@ -53,6 +113,7 @@ class VersePaneDom extends Component {
         props.hashList,
         hashList,
       )
+      && filterFn === props.filterFn
     ) return
 
     const { verseList } = getVersion(versionName)
@@ -96,6 +157,10 @@ class VersePaneDom extends Component {
             }
             .verse em {
               white-space: nowrap;
+            }
+            .verses-after, .verses-before {
+              box-shadowd: 0 0 5px 5px #eee;
+              background: #eee;
             }
         `}}/>
       </div>
@@ -149,7 +214,10 @@ const rewriteAll = ({
         } = getVerseFromHash(versionName, hash)
         if (filterFn(text)) {
           const reference = `${titleCase(book)} ${chapter}:${verse}`
-          innerHtml += `<div id="${hash}" class="verse">${text} <em>(${reference})</em></div>\n`
+          innerHtml += `
+          <div id="${hash}" class="verse" tabindex="100">
+            ${text} <em>(${reference})</em>
+          </div>\n`
           cost++
         }
       }
@@ -174,5 +242,20 @@ const selfDistruct = (el) => {
   }
   el.remove()
 }
+
+const renderVerse = (versionName, hash) => {
+  const {
+    text,
+    book,
+    chapter,
+    verse,
+  } = getVerseFromHash(versionName, hash)
+
+  const reference = `${titleCase(book)} ${chapter}:${verse}`
+  return `<div class="verse">
+    ${text} <em>(${reference})</em>
+  </div>\n`
+}
+
 
 export default observer(['verseList'])(VersePaneDom)
