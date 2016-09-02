@@ -7,20 +7,28 @@ import DebugVerseListPane from './debug-verse-list-pane'
 import EditVerseListPane from './edit-verse-list-pane'
 import VersesPane from './verses-pane'
 import VersePaneDom from './verse-pane-dom'
+import QueryBar from './query-bar'
 
 window.bib = bib
 
-const ref = ({book, chapter, verse}) =>
-  `${book && (book[0].toUpperCase() + book.substr(1)) || ''}${book ? ' ' : ''}${chapter || ''}${verse ? ':' : ''}${verse || ''}`
-
 const App = ({ verseList }) => (
   <div style={styles.wrapper}>
-    <EditVerseListPane />
-    <DebugVerseListPane />
-    <VersePaneDom
-      versionName="kjv"
-      hashList={verseList.hashList}
-    />
+    <div style={styles.col}>
+      <div style={styles.row1}>
+        <QueryBar />
+      </div>
+      <div style={styles.row2}>
+        <EditVerseListPane />
+        <DebugVerseListPane />
+        <VersePaneDom
+          versionName="kjv"
+          hashList={verseList.hashList}
+          filterText={verseList.filterText}
+          fullWords={verseList.fullWords}
+          caseSensitive={verseList.caseSensitive}
+        />
+      </div>
+    </div>
   </div>
 )
 
@@ -31,6 +39,20 @@ const styles = {
     display: 'flex',
     background: '#ccc',
     margin: -1,
+  },
+  row1: {
+    display: 'flex',
+    background: 'white',
+  },
+  row2: {
+    display: 'flex',
+    flex: 1,
+  },
+  col: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    backround: 'blue',
   },
 }
 

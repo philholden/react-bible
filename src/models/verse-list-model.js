@@ -8,6 +8,7 @@ import {
   getVersion,
   getHashesFromVerseRanges,
 } from '../util/bible'
+import googlish from 'googlish'
 
 console.log(getVerseRanges(''))
 
@@ -15,19 +16,25 @@ export default class VerseListModel {
   store
   id
   @observable text = ''
+  @observable filterText = ''
+  @observable caseSensitive = false
+  @observable fullWords = false
   @computed get verseRanges() {
     const ranges = getVerseRanges(this.text)
-    const ranges2 = ranges.map(range =>
+    return ranges.map(range =>
       fillRangeEnds('kjv', range))
-    const ends = ranges2.map(range => ({
-      start: getVersion('kjv').verseList[range.start.index],
-      end: getVersion('kjv').verseList[range.end.index],
-    }))
-    console.log(JSON.stringify(ranges2, 0, 2))
-    console.log(JSON.stringify(ends), 0, 2)
-    return ranges2
   }
   @computed get hashList() {
+    console.log('run')
     return getHashesFromVerseRanges('kjv', this.verseRanges)
+  }
+  @computed get filterFn() {
+    const filterText = this.filterText
+    console.log('run2')
+    return googlish(
+      filterText,
+      this.fullWords,
+      this.caseSensitive
+    )
   }
 }

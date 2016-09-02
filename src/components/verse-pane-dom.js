@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { observer } from 'mobx-react'
+import googlish from 'googlish'
 
 import {
   getVersion,
@@ -34,7 +35,15 @@ class VersePaneDom extends Component {
   updateDom = ({
     hashList,
     versionName,
+    filterText,
+    fullWords,
+    caseSensitive,
   }, isInit) => {
+    const filterFn = googlish(
+      filterText,
+      fullWords,
+      caseSensitive
+    )
     window.clearTimeout(this.clearRenderTimeout)
     const { props, rootEl } = this
     if (!rootEl) return
@@ -59,12 +68,13 @@ class VersePaneDom extends Component {
     this.searchRoot = document.createElement('div')
     this.searchRoot.setAttribute('class', 'a' + (Date.now()/1000|0))
     rootEl.insertBefore(this.searchRoot, rootEl.firstChild)
-
+    console.log('filter',filterFn)
     this.clearRenderTimeout = rewriteAll({
       chunkCost: 1000,
       verseList,
       rootEl: this.searchRoot,
       isVisible: hash => displayLookUp[hash],
+      filterFn,
       versionName,
     })
   }
@@ -83,7 +93,9 @@ class VersePaneDom extends Component {
             .verse {
               margin-bottom: 1em;
               line-height: 1.3;
-
+            }
+            .verse em {
+              white-space: nowrap;
             }
         `}}/>
       </div>
@@ -116,9 +128,9 @@ const rewriteAll = ({
   verseList,
   rootEl,
   isVisible,
+  filterFn,
   versionName,
 }) => {
-  let isFirst = true
   let maxCost = 50
   const nextChunk = (start) => () => {
     let i = start
@@ -135,9 +147,11 @@ const rewriteAll = ({
           chapter,
           verse,
         } = getVerseFromHash(versionName, hash)
-        const reference = `${titleCase(book)} ${chapter}:${verse}`
-        innerHtml += `<div id="${hash}" class="verse">${text} <em>(${reference})</em></div>\n`
-        cost++
+        if (filterFn(text)) {
+          const reference = `${titleCase(book)} ${chapter}:${verse}`
+          innerHtml += `<div id="${hash}" class="verse">${text} <em>(${reference})</em></div>\n`
+          cost++
+        }
       }
       i++
     }
