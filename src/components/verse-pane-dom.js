@@ -107,12 +107,14 @@ class VersePaneDom extends Component {
     caseSensitive,
     rangesText,
     versionName,
-
-//    hashList,
-    filterFn,
   }, oldProps) => {
     const fullRange = getFullVerseRanges({ rangesText, versionName })
     const hashList = getHashesFromVerseRanges(versionName, fullRange)
+    const filterFn = googlish(
+      filterText,
+      fullWords,
+      caseSensitive
+    )
     window.clearTimeout(this.clearRenderTimeout)
     const { rootEl } = this
     if (!rootEl) return

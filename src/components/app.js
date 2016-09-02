@@ -23,8 +23,6 @@ function App ({ verseList }) {
           <DebugVerseListPane />
           <VersePaneDom
             versionName="kjv"
-            // hashList={verseList.hashList}
-            filterFn={verseList.filterFn}
             filterText={verseList.filterText}
             rangesText={verseList.rangesText}
             fullWords={verseList.fullWords}

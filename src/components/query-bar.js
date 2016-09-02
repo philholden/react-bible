@@ -15,9 +15,9 @@ const QueryBar = ({verseList}) => (
     <label>range</label>
     {' '}
     <input
-      value={verseList.text}
+      value={verseList.rangesText}
       type="text"
-      onChange={e => verseList.text = e.target.value}
+      onChange={e => verseList.rangesText = e.target.value}
     />
     <Spacer />
     <label>

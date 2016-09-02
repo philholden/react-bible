@@ -7,7 +7,7 @@ import * as bib from '../util/bible'
 const EditVerseListPane = ({ verseList }) => (
   <textarea
     value={verseList.text}
-    onChange={e => verseList.text = e.target.value}
+    onChange={e => verseList.rangesText = e.target.value}
     style={styles.textarea}
   />
 )
