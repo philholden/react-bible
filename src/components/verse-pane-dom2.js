@@ -52,18 +52,10 @@ class VersePaneDom extends Component {
       return acc
     }, {})
 
-    if (this.searchRoot) {
-      selfDistruct(this.searchRoot)
-    }
-
-    this.searchRoot = document.createElement('div')
-    this.searchRoot.setAttribute('class', 'a' + (Date.now()/1000|0))
-    rootEl.insertBefore(this.searchRoot, rootEl.firstChild)
-
     this.clearRenderTimeout = rewriteAll({
       chunkCost: 1000,
       verseList,
-      rootEl: this.searchRoot,
+      rootEl,
       isVisible: hash => displayLookUp[hash],
       versionName,
     })
@@ -76,19 +68,60 @@ class VersePaneDom extends Component {
         ref={el => {
           if (el != null) this.rootEl = el
         }}
-      >
-        <style
-          dangerouslySetInnerHTML={{
-            __html:`
-            .verse {
-              margin-bottom: 1em;
-              line-height: 1.3;
-
-            }
-        `}}/>
-      </div>
+      />
     )
   }
+}
+
+const replace = (el, text, reference, display) => {
+  el.innerHTML = `${text} <em>(${reference})</em>`
+  el.style.display = display
+  return 3
+}
+
+const add = (parentEl, text, reference, display) => {
+  const el = document.createElement('div')
+  replace(el, text, reference, display)
+  parentEl.appendChild(el)
+  return 7
+}
+
+const rewrite = (el, text, reference, display) => {
+  const txt = el.childNodes[0]
+  const ref = el.childNodes[1].childNodes[0]
+  const sty = el.style
+  const newText = ` ${text}`
+  const newReference = `(${reference})`
+  let mutations = 0
+  if (txt.nodeValue !== newText) {
+    txt.nodeValue = newText
+    mutations++
+  }
+  if (ref.nodeValue !== newReference) {
+    ref.nodeValue = newReference
+    mutations++
+  }
+  if (sty.display !== display) {
+    sty.display = display
+    mutations++
+  }
+  return mutations
+}
+
+const setVerse = ({
+  parentEl,
+  index,
+  text,
+  reference,
+  display,
+}) => {
+  const node = parentEl.childNodes[index]
+  if (!node) {
+    return add(parentEl, text, reference, display)
+  } else if (node.childNodes.length === 2) {
+    return rewrite(node, text, reference, display)
+  }
+  return replace(node, text, reference, display)
 }
 
 const arrayEquals = (arr1, arr2) => {
@@ -118,47 +151,32 @@ const rewriteAll = ({
   isVisible,
   versionName,
 }) => {
-  let isFirst = true
-  let maxCost = 50
   const nextChunk = (start) => () => {
     let i = start
     let cost = 0
     const end = verseList.length
-    const chunkEl = document.createElement('div')
-    let innerHtml = ''
-    while (i < end && cost < maxCost) {
+    while (i < end && cost < chunkCost) {
       const hash = verseList[i].hash
-      if (isVisible(hash)) {
-        const {
-          text,
-          book,
-          chapter,
-          verse,
-        } = getVerseFromHash(versionName, hash)
-        const reference = `${titleCase(book)} ${chapter}:${verse}`
-        innerHtml += `<div id="${hash}" class="verse">${text} <em>(${reference})</em></div>\n`
-        cost++
-      }
+      const {
+        text,
+        book,
+        chapter,
+        verse,
+      } = getVerseFromHash(versionName, hash)
+      cost += setVerse({
+        parentEl: rootEl,
+        index: i,
+        text,
+        reference: `${titleCase(book)} ${chapter}:${verse}`,
+        display: isVisible(hash) ? 'block' : 'none',
+      })
       i++
     }
-    maxCost = chunkCost
-    chunkEl.innerHTML = innerHtml
-    rootEl.appendChild(chunkEl)
     return i >= end ?
       -1 :
-      window.setTimeout(nextChunk(i), 100)
+      window.setTimeout(nextChunk(i), 50)
   }
-  return window.setTimeout(nextChunk(0), 0)
-}
-
-const selfDistruct = (el) => {
-  if (!document.contains(el)) return
-  el.style.display = 'none'
-  if (el.firstChild) {
-    el.firstChild.remove()
-    setTimeout(() => selfDistruct(el), 100)
-  }
-  el.remove()
+  return window.setTimeout(nextChunk(0), 50)
 }
 
 export default observer(['verseList'])(VersePaneDom)
