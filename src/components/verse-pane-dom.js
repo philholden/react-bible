@@ -10,8 +10,17 @@ import {
   titleCase,
 } from '../util/bible'
 
+type VersePaneDomPropsType = {
+  filterText: string,
+  fullWords: boolean,
+  caseSensitive: boolean,
+  rangesText: string,
+  versionName: string,
+}
+
 class VersePaneDom extends Component {
-  rootEl = null
+  rootEl: HTMLElement
+  searchRoot: HTMLElement
   clearRenderTimeout = -1
 
   shouldComponentUpdate() {
@@ -25,6 +34,7 @@ class VersePaneDom extends Component {
     console.log(version)
     document.addEventListener('keydown', (e: Event) => {
       let el = e.target
+      if (!(el instanceof HTMLElement)) return
       console.log(e.keyCode, el.id, el.classList)
       if (
         (el.classList.contains('verse') ||
@@ -46,8 +56,8 @@ class VersePaneDom extends Component {
         const afterEl = el.querySelector('.verses-after')
         el.focus()
         const div = document.createElement('div')
-        //setTimeout(() => el.focus(), 1000)
-        switch(e.keyCode) {
+        // setTimeout(() => el.focus(), 1000)
+        switch (e.keyCode) {
           case 37: {
             const { length } = beforeEl.children
             const index = version.verseLookUp[el.id] - (length + 1)
@@ -55,12 +65,11 @@ class VersePaneDom extends Component {
             const { hash } = version.verseList[index]
             beforeEl.insertBefore(div, beforeEl.firstChild)
             div.outerHTML = renderVerse(versionName, hash)
-            break;
+            break
           }
           case 39:
-            console.log(beforeEl)
             if (beforeEl.firstChild) beforeEl.firstChild.remove()
-            break;
+            break
           case 40: {
             const { length } = afterEl.children
             const index = version.verseLookUp[el.id] + (length + 1)
@@ -68,25 +77,18 @@ class VersePaneDom extends Component {
             const { hash } = version.verseList[index]
             afterEl.appendChild(div)
             div.outerHTML = renderVerse(versionName, hash)
-            break;
+            break
           }
-            afterEl.appendChild(div)
-            div.outerHTML = `
-            <div class="verse">
-              ${text} <em>(${reference})</em>
-            </div>\n`
-            break;
           case 38:
             if (afterEl.lastChild) afterEl.lastChild.remove()
-            break;
+            break
         }
-        return false
       }
     })
   }
 
   componentWillReceiveProps(props) {
-    //window.setTimeout(() => this.updateDom(props), 75)
+    // window.setTimeout(() => this.updateDom(props), 75)
     this.updateDom(props, this.props)
   }
 
@@ -97,11 +99,13 @@ class VersePaneDom extends Component {
   }
 
   updateDom = ({
-    hashList,
-    versionName,
     filterText,
     fullWords,
     caseSensitive,
+    rangesText,
+    versionName,
+    
+    hashList,
     filterFn,
   }, oldProps) => {
     console.log(filterText)
