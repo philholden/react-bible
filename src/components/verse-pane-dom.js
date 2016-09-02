@@ -21,7 +21,7 @@ class VersePaneDom extends Component {
   componentDidMount() {
     const { versionName } = this.props
     const version = getVersion(versionName)
-    this.updateDom(this.props, true)
+    this.updateDom(this.props, null)
     console.log(version)
     document.addEventListener('keydown', (e: Event) => {
       let el = e.target
@@ -86,7 +86,8 @@ class VersePaneDom extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.updateDom(props)
+    //window.setTimeout(() => this.updateDom(props), 75)
+    this.updateDom(props, this.props)
   }
 
   componentWillUnmount() {
@@ -102,18 +103,18 @@ class VersePaneDom extends Component {
     fullWords,
     caseSensitive,
     filterFn,
-  }, isInit) => {
+  }, oldProps) => {
     console.log(filterText)
     window.clearTimeout(this.clearRenderTimeout)
-    const { props, rootEl } = this
+    const { rootEl } = this
     if (!rootEl) return
     if (
-      !isInit &&
+      oldProps &&
       arrayEquals(
-        props.hashList,
+        oldProps.hashList,
         hashList,
       )
-      && filterFn === props.filterFn
+      && filterFn === oldProps.filterFn
     ) return
 
     const { verseList } = getVersion(versionName)
@@ -223,14 +224,15 @@ const rewriteAll = ({
       }
       i++
     }
-    maxCost = chunkCost
+    maxCost = Math.max(chunkCost, maxCost + 100)
     chunkEl.innerHTML = innerHtml
     rootEl.appendChild(chunkEl)
     return i >= end ?
       -1 :
       window.setTimeout(nextChunk(i), 100)
   }
-  return window.setTimeout(nextChunk(0), 0)
+  nextChunk(0)()
+  return 0
 }
 
 const selfDistruct = (el) => {
