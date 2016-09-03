@@ -2,6 +2,8 @@
 node_modules
 npm-debug.log
 /dist
+/docs/dist/bundle-app.js.map
+/docs/dist/bundle-vendor.js.map
 .nyc_output
 coverage
 lib
