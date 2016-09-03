@@ -25,6 +25,7 @@ class VersePaneDom extends Component {
   searchRoot: HTMLElement
   clearRenderTimeout = -1
   hashList: Array<string> = []
+  props: VersePaneDomPropsType
 
   shouldComponentUpdate() {
     return false

@@ -1,31 +1,74 @@
+// @flow
+
 import {
   abbr,
   getVerseRanges
 } from 'bible-references'
 import kjv from '../../version/kjv.json'
 
-const bookNumber = abbr.reduce((acc, bookAbbrs, i) => {
+type VerseListItemType = {
+  hash: string,
+  text: string,
+}
+
+type LastVerseType = { verse: number }
+type LastChapterType = {
+  chapter: number,
+  chapters: LastVerseType
+}
+type LastBookType = {
+  book: number,
+  books: LastChapterType
+}
+
+type BibleVersionType = {
+  verseList: Array<VerseListItemType>,
+  verseLookUp: {[key: string]: number},
+  last: LastBookType,
+}
+
+type BibleRefType = {
+  book?: string,
+  chapter?: string,
+  verse?: string,
+  index?: number
+}
+
+type VerseRangeType = {
+  start: BibleRefType,
+  end: BibleRefType
+}
+
+type BibleVerseType = {
+  text: string,
+  book: string,
+  chapter: string,
+  verse: string,
+}
+
+type JsonVerseType = {
+  n: number,
+  txt: string,
+}
+type JsonChapterType = Array<JsonVerseType>
+type JsonBibleType = Array<JsonChapterType>
+
+const bookNumber: {[key: string]: number} = abbr.reduce((acc, bookAbbrs, i) => {
   acc[bookAbbrs[0]] = i
   return acc
 }, {})
 
-const bookNames = abbr.reduce((acc, bookAbbrs, i) => {
+const bookNames: {[key: string]: string} = abbr.reduce((acc, bookAbbrs, i) => {
   acc[i] = bookAbbrs[0]
   return acc
 }, {})
 
-// const bookDisplayNames = Object.values(bookNames)
-//   .map(book => book.replace(
-//     /\b\w/g,
-//     (m) => m.toUpperCase()
-//   ).replace(' Of ', ' of '))
-
-export const titleCase = str => str.replace(
+export const titleCase = (str: string): string => str.replace(
   /\b\w/g,
   (m) => m.toUpperCase()
 ).replace(' Of ', ' of ')
 
-export const bibleVersionToLookUp = (bibleVersion) => {
+export const bibleVersionToLookUp = (bibleVersion: JsonBibleType): BibleVersionType => {
   const verseList = []
   const verseLookUp = {}
   const last = {
@@ -56,7 +99,7 @@ export const bibleVersionToLookUp = (bibleVersion) => {
   return { verseList, verseLookUp, last }
 }
 
-export const versions = {
+export const versions: {[key: string]: BibleVersionType} = {
   kjv: bibleVersionToLookUp(kjv),
 }
 
@@ -72,7 +115,10 @@ const limit = (n, max) => {
   return n * 1
 }
 
-export const fillRangeEnds = (versionName, verseRange) => {
+export const fillRangeEnds = (
+  versionName: string,
+  verseRange: VerseRangeType
+): VerseRangeType => {
   const { start, end } = verseRange
   const version = getVersion(versionName)
   const startIndex = version
@@ -93,33 +139,45 @@ export const fillRangeEnds = (versionName, verseRange) => {
     },
     end: {
       book: getBookName(endBook),
-      chapter: endChapter + 1,
-      verse: endVerse,
+      chapter: `${endChapter + 1}`,
+      verse: `${endVerse}`,
       index: endIndex,
     },
   }
 }
 
-export const getBookName = index => bookNames[index]
+export const getBookName = (index: number): string => bookNames[index]
 
-export const expandHash = hash => {
+export const expandHash = (hash: string): BibleRefType => {
   const parts = hash.split(':')
   return {
     book: getBookName(parts[0]),
-    chapter: parts[1] * 1 + 1,
+    chapter: `${parts[1] * 1 + 1}`,
     verse: parts[2],
   }
 }
-export const getVersion = versionName => versions[versionName]
-export const getBookNumber = bookName => bookNumber[bookName]
+export const getVersion = (
+  versionName: string
+): BibleVersionType => versions[versionName]
 
-export const getIndexFromHash = (versionName, hash) =>
-  versions[versionName].verseLookUp[hash]
+export const getBookNumber = (
+  bookName: string
+): number => bookNumber[bookName]
 
-export const getVerseFromIndex = (versionName, index) =>
-  versions[versionName].verseList[index]
+export const getIndexFromHash = (
+  versionName: string,
+  hash: string
+): number => versions[versionName].verseLookUp[hash]
 
-export const getVerseFromHash = (versionName, hash) => {
+export const getVerseFromIndex = (
+  versionName: string,
+  index: number
+): VerseListItemType => versions[versionName].verseList[index]
+
+export const getVerseFromHash = (
+  versionName: string,
+  hash: string
+): BibleVerseType => {
   const index = getIndexFromHash(versionName, hash)
   const { text } = getVerseFromIndex(versionName, index)
   return {
@@ -137,14 +195,17 @@ const getIndexRange = (startIndex, endIndex) => {
 }
 
 export const getHashesFromIndexRange = (
-  versionName,
-  startIndex,
-  endIndex
-) =>
+  versionName: string,
+  startIndex: number,
+  endIndex: number
+): Array<string> =>
   getIndexRange(startIndex, endIndex)
     .map(index => getVersion(versionName).verseList[index].hash)
 
-export const getHashesFromVerseRanges = (versionName, verseRanges) => {
+export const getHashesFromVerseRanges = (
+  versionName: string,
+  verseRanges: Array<VerseRangeType>
+): Array<string> => {
   const ranges = verseRanges.map(
     ({ start, end }) =>
       getHashesFromIndexRange(versionName, start.index, end.index)
@@ -152,9 +213,11 @@ export const getHashesFromVerseRanges = (versionName, verseRanges) => {
   return [].concat(...ranges)
 }
 
-export const getFullVerseRanges = ({ rangesText, versionName }) => {
+export const getFullVerseRanges = (
+  { rangesText, versionName }: { rangesText: string, versionName: string }
+) => {
   const text = rangesText || 'gen - rev'
-  const ranges = getVerseRanges(text)
+  const ranges: Array<VerseRangeType> = getVerseRanges(text)
   return ranges.map(range =>
     fillRangeEnds(versionName, range))
 }

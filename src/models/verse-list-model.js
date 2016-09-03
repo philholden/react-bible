@@ -10,7 +10,7 @@ import {
 } from '../util/bible'
 import googlish from 'googlish'
 
-console.log(getVerseRanges(''))
+console.log(getVersion('kjv'))
 
 export default class VerseListModel {
   store
