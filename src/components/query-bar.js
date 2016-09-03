@@ -52,7 +52,8 @@ export default class QueryBar extends Component {
             onChange={this.updateState('rangesText', 'value')}
           />
         </div>
-        <label style={styles.block}>
+        <div style={styles.block}>
+        <label>
         <input
           type="checkbox"
           checked={caseSensitive}
@@ -61,7 +62,8 @@ export default class QueryBar extends Component {
           {' '}
           Case Sensitive
         </label>
-        <label style={styles.block}>
+        <Spacer />
+        <label>
           <input
             type="checkbox"
             checked={fullWords}
@@ -70,6 +72,7 @@ export default class QueryBar extends Component {
           {' '}
           Full Words
         </label>
+        </div>
       </div>
     )
   }
@@ -81,16 +84,14 @@ const styles = {
     borderBottom: '1px solid #ccc',
     display: 'flex',
     flexWrap: 'wrap',
-    marginLeft: -5,
-    marginRight: -5,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
   block: {
     whiteSpace: 'nowrap',
     display: 'inline-block',
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
     paddingTop: 5,
     paddingBottom: 5,
   }

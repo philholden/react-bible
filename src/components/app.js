@@ -54,7 +54,6 @@ const styles = {
     width: '100vw',
     height: '100vh',
     display: 'flex',
-    background: '#ccc',
     margin: -1,
   },
   row1: {

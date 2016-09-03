@@ -43,10 +43,12 @@ const styles = {
     flex: 1,
   },
   verseWrapper: {
-    paddingTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
     flex: 1,
+    paddingTop: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
     overflow: 'auto',
+  },
+  padding:{
   }
 }

@@ -125,8 +125,9 @@ class VersePaneDom extends Component {
       arrayEquals(
         this.hashList,
         hashList,
-      )
-      && filterText === oldProps.filterText
+      ) &&
+      filterText === oldProps.filterText &&
+      caseSensitive === oldProps.caseSensitive
     ) return
 
     this.hashList = hashList
@@ -167,13 +168,13 @@ class VersePaneDom extends Component {
             __html:`
             .verse {
               line-height: 1.5;
-              margin: 0 5px 1.5em;
+              margin: 0 0 1.5em;
+              padding: 0 5px;
             }
             .verse em {
               white-space: nowrap;
             }
             .verses-after, .verses-before {
-              box-shadowd: 0 0 5px 5px #eee;
               background: #eee;
             }
         `}}/>
@@ -194,9 +195,7 @@ const arrayEquals = (arr1, arr2) => {
 const styles = {
   wrapper: {
     fontFamily: 'sans-serif',
-    fontSize: 16,
-    background: '#fff',
-    overflow: 'auto',
+    fontSize: 20,
   },
 }
 

@@ -36,7 +36,10 @@ const styles = {
   textarea: {
     width: '8em',
     fontSize: 16,
-    padding: 10,
+    paddingTop: 22,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
     resize: 'none',
     borderRight: '1px solid #ccc',
     borderBottom: 'none',

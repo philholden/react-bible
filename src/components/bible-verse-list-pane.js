@@ -40,8 +40,8 @@ const styles = {
   },
   verseWrapper: {
     paddingTop: 20,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
     borderRight: '1px solid #ccc',
     background: 'white',
     flex: 1,

@@ -140,7 +140,6 @@ const styles = {
     fontSize: 16,
     padding: 10,
     background: '#fff',
-    overflow: 'auto',
   },
 }
 
