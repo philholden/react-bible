@@ -4,12 +4,13 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import * as bib from '../util/bible'
 import DebugVerseListPane from './debug-verse-list-pane'
-import EditVerseListPane from './edit-verse-list-pane'
+//import EditVerseListPane from './edit-verse-list-pane'
 //import VersesPane from './verses-pane'
 //import VersePaneDom from './verse-pane-dom'
-import RangePane from './range-pane'
+//import RangePane from './range-pane'
 //import QueryBar from './query-bar'
 
+import BibleVerseListPane from './bible-verse-list-pane'
 import BibleSearchPane from './bible-search-pane'
 
 window.bib = bib
@@ -22,13 +23,14 @@ function App ({ verseList }) {
           <QueryBar />
         </div> */}
         <div style={styles.row2}>
-          <EditVerseListPane />
+          <BibleVerseListPane />
+          {/* <EditVerseListPane />
           <div style={styles.colWrapper}>
             <RangePane
               versionName="kjv"
               rangesText={verseList.rangeListText}
             />
-          </div>
+          </div> */}
           {/* <DebugVerseListPane /> */}
           <div style={styles.colWrapper}>
             <BibleSearchPane />

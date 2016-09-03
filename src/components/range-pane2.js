@@ -15,6 +15,7 @@ const RangePane = ({ versionName, rangesText }) => {
   ranges = ranges
      .filter(removeEmpty)
      .map(text => text.replace(/[,-\s;\n]+$/,''))
+
   return (
     <div style={styles.wrapper}>
       {
@@ -47,4 +48,4 @@ const styles = {
   }
 }
 
-export default RangePane
+export default observer(RangePane)

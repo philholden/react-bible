@@ -1,16 +1,36 @@
 // @flow
 
-import React from 'react'
-import { observer } from 'mobx-react'
-import * as bib from '../util/bible'
+import React, { Component } from 'react'
 
-const EditVerseListPane = ({ verseList }) => (
-  <textarea
-    value={verseList.rangeListText}
-    onChange={e => verseList.rangeListText = e.target.value}
-    style={styles.textarea}
-  />
-)
+export default class EditVerseListPane extends Component {
+  state = {
+    versionName: 'kjv',
+    rangesText: '',
+    ...(this.props.defaultValue || {}),
+  }
+
+  updateState = (key, field) => ({ target }) => {
+    const update = { [key]: target[field] }
+    this.setState(update)
+    if (this.props.onChange) {
+      this.props.onChange({
+        ...this.state,
+        ...update,
+      })
+    }
+  }
+
+  render() {
+    const { rangeText } = this.state
+    return (
+      <textarea
+        value={rangeText}
+        onChange={this.updateState('rangesText', 'value')}
+        style={styles.textarea}
+      />
+    )
+  }
+}
 
 const styles = {
   textarea: {
@@ -18,9 +38,9 @@ const styles = {
     fontSize: 16,
     padding: 10,
     resize: 'none',
-    border: 'none',
-    margin: 1
+    borderRight: '1px solid #ccc',
+    borderBottom: 'none',
+    borderTop: 'none',
+    borderLeft: 'none',
   }
 }
-
-export default observer(['verseList'])(EditVerseListPane)
