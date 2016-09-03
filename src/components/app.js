@@ -5,8 +5,9 @@ import { observer } from 'mobx-react'
 import * as bib from '../util/bible'
 import DebugVerseListPane from './debug-verse-list-pane'
 import EditVerseListPane from './edit-verse-list-pane'
-import VersesPane from './verses-pane'
+//import VersesPane from './verses-pane'
 import VersePaneDom from './verse-pane-dom'
+import RangePane from './range-pane'
 import QueryBar from './query-bar'
 
 window.bib = bib
@@ -20,14 +21,22 @@ function App ({ verseList }) {
         </div>
         <div style={styles.row2}>
           <EditVerseListPane />
-          <DebugVerseListPane />
-          <VersePaneDom
-            versionName="kjv"
-            filterText={verseList.filterText}
-            rangesText={verseList.rangesText}
-            fullWords={verseList.fullWords}
-            caseSensitive={verseList.caseSensitive}
-          />
+          <div style={styles.colWrapper}>
+            <RangePane
+              versionName="kjv"
+              rangesText={verseList.rangeListText}
+            />
+          </div>
+          {/* <DebugVerseListPane /> */}
+          <div style={styles.colWrapper}>
+            <VersePaneDom
+              versionName="kjv"
+              filterText={verseList.filterText}
+              rangesText={verseList.rangesText}
+              fullWords={verseList.fullWords}
+              caseSensitive={verseList.caseSensitive}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -56,6 +65,12 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     backround: 'blue',
+  },
+  colWrapper: {
+    padding: 20,
+    overflow: 'auto',
+    flex: 1,
+    background: 'white',
   },
 }
 

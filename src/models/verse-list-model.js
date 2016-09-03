@@ -16,6 +16,7 @@ export default class VerseListModel {
   store
   id
   @observable rangesText = ''
+  @observable rangeListText = ''
   @observable filterText = ''
   @observable caseSensitive = false
   @observable fullWords = false

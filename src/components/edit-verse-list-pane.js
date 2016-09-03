@@ -6,15 +6,15 @@ import * as bib from '../util/bible'
 
 const EditVerseListPane = ({ verseList }) => (
   <textarea
-    value={verseList.text}
-    onChange={e => verseList.rangesText = e.target.value}
+    value={verseList.rangeListText}
+    onChange={e => verseList.rangeListText = e.target.value}
     style={styles.textarea}
   />
 )
 
 const styles = {
   textarea: {
-    flex: 1,
+    width: '8em',
     fontSize: 16,
     padding: 10,
     resize: 'none',

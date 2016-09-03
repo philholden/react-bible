@@ -36,7 +36,7 @@ class VersePaneDom extends Component {
     const version = getVersion(versionName)
     this.updateDom(this.props, null)
     console.log(version)
-    document.addEventListener('keydown', (e: Event) => {
+    this.rootEl.addEventListener('keydown', (e: Event) => {
       let el = e.target
       if (!(el instanceof HTMLElement)) return
       console.log(e.keyCode, el.id, el.classList)
@@ -45,16 +45,17 @@ class VersePaneDom extends Component {
         el.classList.contains('verse-group'))
         && [37, 38, 39, 40].indexOf(e.keyCode) !== -1
       ) {
-        console.log('prevent')
         e.preventDefault()
         if (el.classList.contains('verse')) {
+          const parent = el.parentElement
+          console.log(el, parent)
           el.outerHTML = `
           <div id="${el.id}" tabindex="100" class="verse-group">
           <div class="verses-before"></div>
           <div class="verse">${el.innerHTML}</div>
           <div class="verses-after"></div>
           </div>`
-          el = document.getElementById(el.id)
+          el = parent.querySelector(`[id=${el.id}]`)
         }
         const beforeEl = el.querySelector('.verses-before')
         const afterEl = el.querySelector('.verses-after')
@@ -64,7 +65,7 @@ class VersePaneDom extends Component {
         switch (e.keyCode) {
           case 37: {
             const { length } = beforeEl.children
-            const index = version.verseLookUp[el.id] - (length + 1)
+            const index = version.verseLookUp[idToHash(el.id)] - (length + 1)
             if (index < 0) return
             const { hash } = version.verseList[index]
             beforeEl.insertBefore(div, beforeEl.firstChild)
@@ -76,7 +77,7 @@ class VersePaneDom extends Component {
             break
           case 40: {
             const { length } = afterEl.children
-            const index = version.verseLookUp[el.id] + (length + 1)
+            const index = version.verseLookUp[idToHash(el.id)] + (length + 1)
             if (index >= version.verseLookUp) return
             const { hash } = version.verseList[index]
             afterEl.appendChild(div)
@@ -165,8 +166,8 @@ class VersePaneDom extends Component {
           dangerouslySetInnerHTML={{
             __html:`
             .verse {
-              margin-bottom: 1em;
-              line-height: 1.3;
+              line-height: 1.5;
+              margin: 0 5px 1.5em;
             }
             .verse em {
               white-space: nowrap;
@@ -192,10 +193,8 @@ const arrayEquals = (arr1, arr2) => {
 
 const styles = {
   wrapper: {
-    flex: 1,
     fontFamily: 'sans-serif',
     fontSize: 16,
-    padding: 10,
     background: '#fff',
     overflow: 'auto',
   },
@@ -228,7 +227,7 @@ const rewriteAll = ({
         if (filterFn(text)) {
           const reference = `${titleCase(book)} ${chapter}:${verse}`
           innerHtml += `
-          <div id="${hash}" class="verse" tabindex="100">
+          <div id="${hashToId(hash)}" class="verse" tabindex="100">
             ${text} <em>(${reference})</em>
           </div>\n`
           cost++
@@ -268,8 +267,11 @@ const renderVerse = (versionName, hash) => {
   const reference = `${titleCase(book)} ${chapter}:${verse}`
   return `<div class="verse">
     ${text} <em>(${reference})</em>
-  </div>\n`
+  </div>`
 }
 
+const hashToId = (hash) => `h${hash.replace(/:/g, '-')}`
+const idToHash = (id) => id.substr(1).replace(/-/g, ':')
 
-export default observer(['verseList'])(VersePaneDom)
+
+export default observer(VersePaneDom)
