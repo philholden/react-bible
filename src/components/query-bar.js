@@ -1,51 +1,97 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { observer } from 'mobx-react'
 import Spacer from './spacer'
 
-const QueryBar = ({verseList}) => (
-  <div style={styles.wrapper}>
-    <label>search</label>
-    {' '}
-    <input
-      value={verseList.filterText}
-      type="text"
-      onChange={e => verseList.filterText = e.target.value}
-    />
-    <Spacer />
-    <label>range</label>
-    {' '}
-    <input
-      value={verseList.rangesText}
-      type="text"
-      onChange={e => verseList.rangesText = e.target.value}
-    />
-    <Spacer />
-    <label>
-    <input
-      type="checkbox"
-      checked={verseList.caseSensitive}
-      onChange={e => verseList.caseSensitive = e.target.checked}
-    />
-      {' '}
-      case sensitive
-    </label>
-    <Spacer />
-    <label>
-      <input
-        type="checkbox"
-        checked={verseList.fullWords}
-        onChange={e => verseList.fullWords = e.target.checked}
-      />
-      {' '}
-      full words
-    </label>
-  </div>
-)
+export default class QueryBar extends Component {
+  state = {
+    versionName: 'kjv',
+    filterText: '',
+    rangesText: '',
+    fullWords: false,
+    caseSensitive: false,
+    ...(this.props.defaultValue || {})
+  }
+
+  updateState = (key, field) => ({ target }) => {
+    const update = { [key]: target[field] }
+    this.setState(update)
+    if (this.props.onChange) {
+      this.props.onChange({
+        ...this.state,
+        ...update
+      })
+    }
+  }
+
+  render() {
+    const {
+      versionName,
+      filterText,
+      rangesText,
+      fullWords,
+      caseSensitive,
+    } = this.state
+
+    return (
+      <div style={styles.wrapper}>
+        <div style={styles.block}>
+          <label>Search</label>
+          {' '}
+          <input
+            value={filterText}
+            type="text"
+            onChange={this.updateState('filterText', 'value')}
+          />
+        </div>
+        <div style={styles.block}>
+          <label>Range</label>
+          {' '}
+          <input
+            value={rangesText}
+            type="text"
+            onChange={this.updateState('rangesText', 'value')}
+          />
+        </div>
+        <label style={styles.block}>
+        <input
+          type="checkbox"
+          checked={caseSensitive}
+          onChange={this.updateState('caseSensitive', 'checked')}
+        />
+          {' '}
+          Case Sensitive
+        </label>
+        <label style={styles.block}>
+          <input
+            type="checkbox"
+            checked={fullWords}
+            onChange={this.updateState('fullWords', 'checked')}
+          />
+          {' '}
+          Full Words
+        </label>
+      </div>
+    )
+  }
+}
 
 const styles = {
   wrapper: {
-    padding: 10,
-    fontFamily: 'sans-serif'
+    fontFamily: 'sans-serif',
+    borderBottom: '1px solid #ccc',
+    display: 'flex',
+    flexWrap: 'wrap',
+    marginLeft: -5,
+    marginRight: -5,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
+  block: {
+    whiteSpace: 'nowrap',
+    display: 'inline-block',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+  }
 }
-export default observer(['verseList'])(QueryBar)

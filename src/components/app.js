@@ -6,9 +6,11 @@ import * as bib from '../util/bible'
 import DebugVerseListPane from './debug-verse-list-pane'
 import EditVerseListPane from './edit-verse-list-pane'
 //import VersesPane from './verses-pane'
-import VersePaneDom from './verse-pane-dom'
+//import VersePaneDom from './verse-pane-dom'
 import RangePane from './range-pane'
-import QueryBar from './query-bar'
+//import QueryBar from './query-bar'
+
+import BibleSearchPane from './bible-search-pane'
 
 window.bib = bib
 
@@ -16,9 +18,9 @@ function App ({ verseList }) {
   return (
     <div style={styles.wrapper}>
       <div style={styles.col}>
-        <div style={styles.row1}>
+        {/* <div style={styles.row1}>
           <QueryBar />
-        </div>
+        </div> */}
         <div style={styles.row2}>
           <EditVerseListPane />
           <div style={styles.colWrapper}>
@@ -29,13 +31,14 @@ function App ({ verseList }) {
           </div>
           {/* <DebugVerseListPane /> */}
           <div style={styles.colWrapper}>
-            <VersePaneDom
+            <BibleSearchPane />
+            {/* <VersePaneDom
               versionName="kjv"
               filterText={verseList.filterText}
               rangesText={verseList.rangesText}
               fullWords={verseList.fullWords}
               caseSensitive={verseList.caseSensitive}
-            />
+            /> */}
           </div>
         </div>
       </div>
@@ -67,7 +70,8 @@ const styles = {
     backround: 'blue',
   },
   colWrapper: {
-    padding: 20,
+//    paddingLeft: 20,
+//    paddingRight: 20,
     overflow: 'auto',
     flex: 1,
     background: 'white',
