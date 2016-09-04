@@ -6,7 +6,7 @@ export default class EditVerseListPane extends Component {
   state = {
     versionName: 'kjv',
     rangesText: '',
-    ...(this.props.defaultValue || {}),
+    ...(this.props || {}),
   }
 
   updateState = (key, field) => ({ target }) => {
@@ -21,10 +21,10 @@ export default class EditVerseListPane extends Component {
   }
 
   render() {
-    const { rangeText } = this.state
+    const { rangesText } = this.state
     return (
       <textarea
-        value={rangeText}
+        value={rangesText}
         onChange={this.updateState('rangesText', 'value')}
         style={styles.textarea}
       />

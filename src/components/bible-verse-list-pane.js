@@ -7,7 +7,15 @@ import EditVerseListPane from './edit-verse-list-pane'
 export default class BibleVerseListPane extends Component {
   state = {
     versionName: 'kjv',
-    rangesText: '',
+    rangesText: [
+      'Ec 9:11',
+      'lk 2:13,14',
+      'Proverbs 20:3',
+      'Proverbs 26:21',
+      '1 Peter 3:18',
+      'lk 11:9',
+      'prov 6:6-9,11,',
+    ].join('\n')
   }
 
   onChange = (value) => {

@@ -10,4 +10,4 @@ An in memory Bible with as you type search and a verse list.
 
 Try it here:
 
-https://philholden.github.io/bible-react/
+https://philholden.github.io/react-bible/

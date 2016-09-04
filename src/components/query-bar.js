@@ -9,7 +9,7 @@ export default class QueryBar extends Component {
     rangesText: '',
     fullWords: false,
     caseSensitive: false,
-    ...(this.props.defaultValue || {})
+    ...(this.props || {})
   }
 
   updateState = (key, field) => ({ target }) => {
