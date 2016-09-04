@@ -7,8 +7,8 @@ import QueryBar from './query-bar'
 export default class BibleSearchPane extends Component {
   state = {
     versionName: 'kjv',
-    filterText: '"the beginning" God',
-    rangesText: 'jn, 1jn, 2jn, 3jn, rev 1-4',
+    filterText: '',
+    rangesText: 'gen - rev',
     fullWords: false,
     caseSensitive: false,
     ...(this.props || {})
