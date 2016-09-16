@@ -1,2 +1,2 @@
-webpackJsonp([2],{225:function(t,o){!function(t){"use strict";importScripts("sw-toolbox.js"),t.toolbox.options.debug=!0,t.toolbox.router.default=t.toolbox.networkFirst,t.addEventListener("install",function(){return t.skipWaiting()}),t.addEventListener("activate",function(){return t.clients.claim()})}(self)},488:function(t,o,n){t.exports=n(225)}},[488]);
+webpackJsonp([2],{246:function(t,o){!function(t){"use strict";importScripts("sw-toolbox.js"),t.toolbox.options.debug=!0,t.toolbox.router.default=t.toolbox.networkFirst,t.addEventListener("install",function(){return t.skipWaiting()}),t.addEventListener("activate",function(){return t.clients.claim()})}(self)},509:function(t,o,n){t.exports=n(246)}},[509]);
 //# sourceMappingURL=bundle-service-worker.js.map

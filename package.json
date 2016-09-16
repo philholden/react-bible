@@ -47,6 +47,7 @@
   },
   "homepage": "https://github.com/philholden/bible-react",
   "devDependencies": {
+    "aphrodite": "^0.5.0",
     "ava": "^0.15.2",
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",

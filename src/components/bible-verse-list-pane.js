@@ -51,7 +51,7 @@ const styles = {
     paddingTop: 20,
     paddingLeft: 20,
     paddingRight: 20,
-    borderRight: '1px solid #ccc',
+    borderRight: '2px solid #ccc',
     background: 'white',
     flex: 1,
     overflow: 'auto',
