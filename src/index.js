@@ -2,18 +2,12 @@ import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import App from './components/app'
 import { AppContainer } from 'react-hot-loader'
-//import VerseListModel from './models/verse-list-model'
-// import { Provider } from 'mobx-react'
 import 'react-virtualized/styles.css'
-
-//const verseList = new VerseListModel()
 
 function rerender(App2) {
   render(
     <AppContainer>
-      {/* <Provider verseList={verseList}> */}
-        <App2 />
-      {/* </Provider> */}
+      <App2 />
     </AppContainer>
     ,
     document.getElementById('root')

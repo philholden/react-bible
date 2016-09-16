@@ -4,7 +4,6 @@ import {
   abbr,
   getVerseRanges
 } from 'bible-references'
-import kjv from '../../version/kjv.json'
 
 type VerseListItemType = {
   hash: string,
