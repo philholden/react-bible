@@ -15,7 +15,7 @@ export const getGreeting = () => fetch('/greeting')
 
 export const loadVersion = (name: string) => {
   if (versionsPromised[name]) return versionsPromised[name]
-  versionsPromised[name] = fetch(`version/${name}.flat`)
+  versionsPromised[name] = fetch(`version/${name}.txt`)
   .then(res => {
     if (res.status >= 400) {
       delete versionsPromised[name]
