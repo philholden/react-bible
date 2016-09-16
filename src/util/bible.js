@@ -99,7 +99,7 @@ export const bibleVersionToLookUp = (bibleVersion: JsonBibleType): BibleVersionT
   return { verseList, verseLookUp, last }
 }
 
-export const versions: {[key: string]: BibleVersionType} = {
+const versions: {[key: string]: BibleVersionType} = {
   kjv: bibleVersionToLookUp(kjv),
 }
 
