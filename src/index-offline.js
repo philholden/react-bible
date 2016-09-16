@@ -3,6 +3,8 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import App from './components/app'
 import { AppContainer } from 'react-hot-loader'
 
+navigator.serviceWorker && navigator.serviceWorker.register('service-worker.js')
+
 function rerender(App2) {
   render(
     <AppContainer>

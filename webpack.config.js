@@ -17,6 +17,17 @@ module.exports = env => {
         ),
         './index',
       ],
+      offline: [
+        ...ifDev(
+          'react-hot-loader/patch',
+          'eventsource-polyfill',
+          'webpack-hot-middleware/client'
+        ),
+        './index-offline',
+      ],
+      'service-worker': [
+        './service-worker',
+      ],
       vendor: ['babel-polyfill', 'react', 'react-dom'],
     },
     output: {

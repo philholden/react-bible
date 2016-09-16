@@ -13,6 +13,17 @@ const server = require('http').createServer(app)
 
 const compiler = webpack(config)
 const port = 3000
+app.use('/', function(req, res, next) {
+  if (/^\/version/.test(req.url)) req.url = `/docs${req.url}`
+  if (/^\/service-worker.js/.test(req.url)) {
+    req.url = `/src${req.url}`
+  }
+  if (/^\/sw-toolbox.js|sw-toolbox.map.json/.test(req.url)) {
+    req.url = `/node_modules/sw-toolbox${req.url}`
+  }
+  console.log(req.url)
+  next()
+})
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
@@ -20,11 +31,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }))
 
 app.use(require('webpack-hot-middleware')(compiler))
-app.use('/', function(req, res, next) {
-  if (/^\/version/.test(req.url)) req.url = `/docs${req.url}`
-  console.log(req.url)
-  next()
-})
+
 app.use(compression({
   threshold: 512,
 }))
