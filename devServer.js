@@ -20,7 +20,11 @@ app.use(require('webpack-dev-middleware')(compiler, {
 }))
 
 app.use(require('webpack-hot-middleware')(compiler))
-
+app.use('/', function(req, res, next) {
+  if (/^\/version/.test(req.url)) req.url = `/docs${req.url}`
+  console.log(req.url)
+  next()
+})
 app.use(compression({
   threshold: 512,
 }))
