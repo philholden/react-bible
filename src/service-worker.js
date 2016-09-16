@@ -20,7 +20,7 @@
   // By default, all requests that don't match our custom handler will use the
   // toolbox.networkFirst cache strategy, and their responses will be stored in
   // the default cache.
-  global.toolbox.router.default = global.toolbox.networkFirst;
+  global.toolbox.router.default = global.toolbox.cacheFirst;
 
   // Boilerplate to ensure our service worker takes control of the page as soon
   // as possible.
