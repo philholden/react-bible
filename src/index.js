@@ -2,25 +2,20 @@ import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import App from './components/app'
 import { AppContainer } from 'react-hot-loader'
-import VerseListModel from './models/verse-list-model'
-import { Provider } from 'mobx-react'
+//import VerseListModel from './models/verse-list-model'
+// import { Provider } from 'mobx-react'
 import 'react-virtualized/styles.css'
-import kjv from '../version/kjv.json'
-import { getVersion } from './api'
 
-getVersion('kjv').then(bible => console.log('ok',bible))
-window.kjv = kjv
-
-const verseList = new VerseListModel()
-console.log(verseList)
+//const verseList = new VerseListModel()
 
 function rerender(App2) {
   render(
     <AppContainer>
-      <Provider verseList={verseList}>
+      {/* <Provider verseList={verseList}> */}
         <App2 />
-      </Provider>
-    </AppContainer>,
+      {/* </Provider> */}
+    </AppContainer>
+    ,
     document.getElementById('root')
   )
 }

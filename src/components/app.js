@@ -15,7 +15,7 @@ import BibleSearchPane from './bible-search-pane'
 
 window.bib = bib
 
-function App ({ verseList }) {
+function App () {
   return (
     <div style={styles.wrapper}>
       <div style={styles.col}>
@@ -79,4 +79,4 @@ const styles = {
   },
 }
 
-export default observer(['verseList'])(App)
+export default App

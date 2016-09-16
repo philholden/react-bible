@@ -5,6 +5,10 @@ import { observer } from 'mobx-react'
 import googlish from 'googlish'
 
 import {
+  loadVersion,
+} from '../api'
+
+import {
   getVersion,
   getVerseFromHash,
   titleCase,
@@ -34,12 +38,10 @@ class VersePaneDom extends Component {
   componentDidMount() {
     const { versionName } = this.props
     const version = getVersion(versionName)
-    this.updateDom(this.props, null)
-    console.log(version)
+    this.updateDomAfterLoading(this.props, null)
     this.rootEl.addEventListener('keydown', (e: Event) => {
       let el = e.target
       if (!(el instanceof HTMLElement)) return
-      console.log(e.keyCode, el.id, el.classList)
       if (
         (el.classList.contains('verse') ||
         el.classList.contains('verse-group'))
@@ -94,13 +96,19 @@ class VersePaneDom extends Component {
 
   componentWillReceiveProps(props) {
     // window.setTimeout(() => this.updateDom(props), 75)
-    this.updateDom(props, this.props)
+    this.updateDomAfterLoading(props, this.props)
   }
 
   componentWillUnmount() {
     if (this.clearRenderTimeout === -1) {
       window.clearTimeout(this.clearRenderTimeout)
     }
+  }
+
+  updateDomAfterLoading = (...args) => {
+    loadVersion('kjv').then(() => {
+      this.updateDom(...args)
+    })
   }
 
   updateDom = ({
@@ -144,7 +152,6 @@ class VersePaneDom extends Component {
     this.searchRoot = document.createElement('div')
     this.searchRoot.setAttribute('class', 'a' + (Date.now()/1000|0))
     rootEl.insertBefore(this.searchRoot, rootEl.firstChild)
-    console.log('filter',filterFn)
     this.clearRenderTimeout = rewriteAll({
       chunkCost: 1000,
       verseList,

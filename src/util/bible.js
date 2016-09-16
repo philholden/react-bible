@@ -21,7 +21,7 @@ type LastBookType = {
   books: LastChapterType
 }
 
-type BibleVersionType = {
+export type BibleVersionType = {
   verseList: Array<VerseListItemType>,
   verseLookUp: {[key: string]: number},
   last: LastBookType,
@@ -99,14 +99,13 @@ export const bibleVersionToLookUp = (bibleVersion: JsonBibleType): BibleVersionT
   return { verseList, verseLookUp, last }
 }
 
-const versions: {[key: string]: BibleVersionType} = {
-  kjv: bibleVersionToLookUp(kjv),
-}
+const versions: {[key: string]: BibleVersionType} = {}
 
-export const addBibleVersion = (name: string) => {
-  getVersion(name).then(bibleVersion => {
-    versions[name] = bibleVersionToLookUp(bibleVersion)
-  })
+export const addBibleVersion = (
+  versionName: string,
+  version: BibleVersionType,
+) => {
+  versions[versionName] = bibleVersionToLookUp(version)
 }
 
 const limit = (n, max) => {
@@ -131,7 +130,6 @@ export const fillRangeEnds = (
   const endVerse = limit(end.verse, maxVerse)
   const endIndex = version
     .verseLookUp[`${endBook}:${endChapter}:${endVerse}`]
-  console.log(endBook, endChapter, endVerse, endIndex)
   return {
     start: {
       ...start,
