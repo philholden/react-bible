@@ -10,7 +10,7 @@ export default class BibleVerseListPane extends Component {
     rangesText: [
       'Ec 9:11',
       'Matt 23:24',
-    //  'lk 2:13,14',
+      '彼得前书 2:13,14',
     //  'Proverbs 20:3',
     //  'Proverbs 26:21',
     //  '1 Peter 3:18',

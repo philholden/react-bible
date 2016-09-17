@@ -22,11 +22,23 @@ export default class EditVerseListPane extends Component {
   }
 
   render() {
-    const { rangesText } = this.state
+    const {
+      rangesText,
+      versionName,
+    } = this.state
     return (
       <div className={css(styles.wrapper)}>
         <div className={css(styles.titlebar)}>
           Verse List
+          <div>
+            <select
+              value={versionName}
+              onChange={this.updateState('versionName', 'value')}
+            >
+              <option value={'kjv'}>KJV</option>
+              <option value={'cuv'}>CUV</option>
+            </select>
+          </div>
         </div>
         <textarea
           value={rangesText}
@@ -74,8 +86,9 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif',
     backgroundColor: '#3f8bae',
     color: 'white',
-    lineHeight: '50px',
+    lineHeight: '30px',
     textAlign: 'center',
+    padding: 10,
   },
   wrapper: {
     display: 'flex',

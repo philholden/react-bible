@@ -105,9 +105,9 @@ class VersePaneDom extends Component {
     }
   }
 
-  updateDomAfterLoading = (...args) => {
-    loadVersion('kjv').then(() => {
-      this.updateDom(...args)
+  updateDomAfterLoading = (nextProps, props) => {
+    loadVersion(nextProps.versionName).then(() => {
+      this.updateDom(nextProps, props)
     })
   }
 
@@ -135,7 +135,8 @@ class VersePaneDom extends Component {
         hashList,
       ) &&
       filterText === oldProps.filterText &&
-      caseSensitive === oldProps.caseSensitive
+      caseSensitive === oldProps.caseSensitive &&
+      versionName === oldProps.versionName
     ) return
 
     this.hashList = hashList

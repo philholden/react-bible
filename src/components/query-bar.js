@@ -75,6 +75,14 @@ export default class QueryBar extends Component {
           {' '}
           Full Words
         </label>
+        <Spacer />
+        <select
+          value={versionName}
+          onChange={this.updateState('versionName', 'value')}
+        >
+          <option value={'kjv'}>KJV</option>
+          <option value={'cuv'}>CUV</option>
+        </select>
         </div>
       </div>
     )

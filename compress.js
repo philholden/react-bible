@@ -10,8 +10,18 @@ const compress = (bible) =>
     ).join('||')
   ).join('|||')
 
-let kjv = fs.readFileSync(path.join(__dirname, 'version', 'kjv.json'), 'utf8')
+let kjv = fs.readFileSync(path.join(
+  __dirname,
+  'docs',
+  'version',
+  'cuv.json'
+), 'utf8')
 kjv = JSON.parse(kjv)
 kjv = compress(kjv)
 console.log(kjv)
-fs.writeFileSync(path.join(__dirname, 'version', 'kjv.flat'), kjv, 'utf8')
+fs.writeFileSync(path.join(
+  __dirname,
+  'docs',
+  'version',
+  'cuv.flat'
+), kjv, 'utf8')

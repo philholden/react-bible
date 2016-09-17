@@ -1,9 +1,11 @@
 // @flow
 
-import {
-  abbr,
-  getVerseRanges
-} from 'bible-references'
+import BibleReferences from 'bible-references'
+
+const {
+  bookNames: abbr,
+  getVerseRanges,
+} = new BibleReferences('english', 'chinese')
 
 type VerseListItemType = {
   hash: string,
