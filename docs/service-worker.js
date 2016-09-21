@@ -8,7 +8,7 @@
   global.toolbox.options.debug = true;
 
   // Set up a handler for HTTP GET requests for /data/ URLs:
-  global.toolbox.router.get(/version\/.*.\.txt/, global.toolbox.cacheOnly, {
+  global.toolbox.router.get(/version\/.*.\.txt/, global.toolbox.cacheFirst, {
     // Use a dedicated cache for the responses, separate from the default cache.
     // Enable notifyOnCacheUpdate to get message events if the response changes.
     cache: {
