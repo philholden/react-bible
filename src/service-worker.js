@@ -8,14 +8,14 @@
   global.toolbox.options.debug = true;
 
   // Set up a handler for HTTP GET requests for /data/ URLs:
-  global.toolbox.router.get(/version\/.*.\.txt/, global.toolbox.cacheFirst, {
-    // Use a dedicated cache for the responses, separate from the default cache.
-    // Enable notifyOnCacheUpdate to get message events if the response changes.
-    cache: {
-      name: 'data-cache',
-      notifyOnCacheUpdate: true
-    }
-  });
+  // global.toolbox.router.get(/version\/.*.\.txt/, global.toolbox.cacheFirst, {
+  //   // Use a dedicated cache for the responses, separate from the default cache.
+  //   // Enable notifyOnCacheUpdate to get message events if the response changes.
+  //   cache: {
+  //     name: 'data-cache',
+  //     notifyOnCacheUpdate: true
+  //   }
+  // });
 
   // By default, all requests that don't match our custom handler will use the
   // toolbox.networkFirst cache strategy, and their responses will be stored in
