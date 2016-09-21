@@ -16,6 +16,10 @@ import {
   getHashesFromVerseRanges,
 } from '../util/bible'
 
+import type {
+  BibleVersionType,
+} from '../util/bible'
+
 type VersePaneDomPropsType = {
   filterText: string,
   fullWords: boolean,
@@ -27,6 +31,7 @@ type VersePaneDomPropsType = {
 class VersePaneDom extends Component {
   rootEl: HTMLElement
   searchRoot: HTMLElement
+  version: BibleVersionType
   clearRenderTimeout = -1
   hashList: Array<string> = []
   props: VersePaneDomPropsType
@@ -37,7 +42,6 @@ class VersePaneDom extends Component {
 
   componentDidMount() {
     const { versionName } = this.props
-    const version = getVersion(versionName)
     this.updateDomAfterLoading(this.props, null)
     this.rootEl.addEventListener('keydown', (e: Event) => {
       let el = e.target
@@ -50,7 +54,6 @@ class VersePaneDom extends Component {
         e.preventDefault()
         if (el.classList.contains('verse')) {
           const parent = el.parentElement
-          console.log(el, parent)
           el.outerHTML = `
           <div id="${el.id}" tabindex="100" class="verse-group">
           <div class="verses-before"></div>
@@ -67,9 +70,9 @@ class VersePaneDom extends Component {
         switch (e.keyCode) {
           case 37: {
             const { length } = beforeEl.children
-            const index = version.verseLookUp[idToHash(el.id)] - (length + 1)
+            const index = this.version.verseLookUp[idToHash(el.id)] - (length + 1)
             if (index < 0) return
-            const { hash } = version.verseList[index]
+            const { hash } = this.version.verseList[index]
             beforeEl.insertBefore(div, beforeEl.firstChild)
             div.outerHTML = renderVerse(versionName, hash)
             break
@@ -79,9 +82,9 @@ class VersePaneDom extends Component {
             break
           case 40: {
             const { length } = afterEl.children
-            const index = version.verseLookUp[idToHash(el.id)] + (length + 1)
-            if (index >= version.verseLookUp) return
-            const { hash } = version.verseList[index]
+            const index = this.version.verseLookUp[idToHash(el.id)] + (length + 1)
+            if (index >= this.version.verseLookUp) return
+            const { hash } = this.version.verseList[index]
             afterEl.appendChild(div)
             div.outerHTML = renderVerse(versionName, hash)
             break
@@ -107,6 +110,8 @@ class VersePaneDom extends Component {
 
   updateDomAfterLoading = (nextProps, props) => {
     loadVersion(nextProps.versionName).then(() => {
+      const { versionName } = this.props
+      this.version = getVersion(versionName)
       this.updateDom(nextProps, props)
     })
   }
@@ -136,6 +141,7 @@ class VersePaneDom extends Component {
       ) &&
       filterText === oldProps.filterText &&
       caseSensitive === oldProps.caseSensitive &&
+      fullWords === oldProps.fullWords &&
       versionName === oldProps.versionName
     ) return
 
